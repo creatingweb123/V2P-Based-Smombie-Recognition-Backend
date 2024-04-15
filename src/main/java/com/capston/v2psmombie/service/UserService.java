@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -54,6 +56,16 @@ public class UserService {
         User target = getUserByDeviceId(deviceId);
         userRepository.delete(target);
         return target.getDeviceId();
+    }
+
+
+    public List<User> getSmombieUsers(String deviceId) {
+
+        User target = getUserByDeviceId(deviceId);
+        List<User> users = userRepository.findByConnectedApId(target.getConnectedAp().getId());
+        return users.stream()
+                .filter(user -> user.isMode() == false && user.isSmombie() == true)
+                .toList();
     }
 
 

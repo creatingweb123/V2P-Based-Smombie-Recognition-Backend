@@ -1,6 +1,8 @@
 package com.capston.v2psmombie.controller;
 
 
+import com.capston.v2psmombie.domain.User;
+import com.capston.v2psmombie.dto.ResponseSmombieDto;
 import com.capston.v2psmombie.dto.UserCreateDto;
 import com.capston.v2psmombie.dto.UserUpdateDto;
 import com.capston.v2psmombie.service.UserService;
@@ -8,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -63,6 +67,27 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("[FAIL] 사용자 삭제: " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * 스몸비 보행자 정보 조회
+     **/
+    @GetMapping("/users/{deviceId}/smombies")
+    public ResponseEntity<Object> smombies(@PathVariable String deviceId) {
+        try {
+            List<User> smombies = userService.getSmombieUsers(deviceId);
+
+            // TODO: 위험도 레벨 계산 로직 추가 필요
+            Integer riskLevel = 0;
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseSmombieDto(riskLevel, smombies));
+
+        } catch (Error e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("[FAIL] 스몸비 조회: " + e.getMessage());
         }
     }
 
