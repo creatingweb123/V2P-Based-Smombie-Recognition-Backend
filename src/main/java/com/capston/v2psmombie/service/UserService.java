@@ -1,7 +1,10 @@
 package com.capston.v2psmombie.service;
 
+import com.capston.v2psmombie.domain.Ap;
 import com.capston.v2psmombie.domain.User;
 import com.capston.v2psmombie.dto.UserCreateDto;
+import com.capston.v2psmombie.dto.UserUpdateDto;
+import com.capston.v2psmombie.repository.ApRepository;
 import com.capston.v2psmombie.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final ApRepository apRepository;
 
 
     @Transactional
@@ -24,6 +28,30 @@ public class UserService {
         return userRepository.save(user).getDeviceId();
     }
 
+
+    @Transactional
+    public String update(String deviceId, UserUpdateDto dto) {
+
+        User user = getUserByDeviceId(deviceId);
+
+        Ap targetAp = apRepository.findByName(dto.getApName())
+                .orElseThrow(() -> new IllegalArgumentException("해당 이름의 AP가 없습니다"));
+
+        user.update(
+                dto.getLatitude(), dto.getLongitude(),
+                dto.getSpeed(), dto.getDirection(),
+                dto.getMode(), dto.getSmombie(),
+                targetAp
+        );
+
+        return userRepository.save(user).getDeviceId();
+    }
+
+
+    private User getUserByDeviceId(String deviceId) {
+        return userRepository.findByDeviceId(deviceId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다"));
+    }
 
 }
 

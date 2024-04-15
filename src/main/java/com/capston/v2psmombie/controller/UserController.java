@@ -2,13 +2,12 @@ package com.capston.v2psmombie.controller;
 
 
 import com.capston.v2psmombie.dto.UserCreateDto;
+import com.capston.v2psmombie.dto.UserUpdateDto;
 import com.capston.v2psmombie.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,6 +28,25 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("[FAIL] 사용자 생성: " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * 사용자 정보 수정
+     **/
+    @PatchMapping("/users/{deviceId}")
+    public ResponseEntity<String> update(
+            @PathVariable String deviceId,
+            @RequestBody UserUpdateDto dto
+    ) {
+        try {
+            String updatedDeviceId = userService.update(deviceId, dto);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("[SUCCESS] 사용자 데이터 수정: " + updatedDeviceId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("[FAIL] 사용자 데이터 수정: " + e.getMessage());
         }
     }
 
