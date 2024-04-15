@@ -50,4 +50,20 @@ public class UserController {
         }
     }
 
+
+    /**
+     * 사용자 삭제
+     **/
+    @DeleteMapping("/users/{deviceId}")
+    public ResponseEntity<String> delete(@PathVariable String deviceId) {
+        try {
+            String delUserDeviceId = userService.delete(deviceId);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("[SUCCESS] 사용자 삭제: " + delUserDeviceId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("[FAIL] 사용자 삭제: " + e.getMessage());
+        }
+    }
+
 }

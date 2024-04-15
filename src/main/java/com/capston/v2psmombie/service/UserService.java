@@ -48,6 +48,15 @@ public class UserService {
     }
 
 
+    @Transactional
+    public String delete(String deviceId) {
+
+        User target = getUserByDeviceId(deviceId);
+        userRepository.delete(target);
+        return target.getDeviceId();
+    }
+
+
     private User getUserByDeviceId(String deviceId) {
         return userRepository.findByDeviceId(deviceId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다"));
