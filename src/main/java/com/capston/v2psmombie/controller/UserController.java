@@ -6,6 +6,13 @@ import com.capston.v2psmombie.dto.ResponseSmombieDto;
 import com.capston.v2psmombie.dto.UserCreateDto;
 import com.capston.v2psmombie.dto.UserUpdateDto;
 import com.capston.v2psmombie.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +22,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@Tag(name = "User", description = "User 관련 REST API에 대한 명세")
 public class UserController {
 
     private final UserService userService;
@@ -24,6 +32,11 @@ public class UserController {
      * 사용자 등록
      **/
     @PostMapping("/users")
+    @Operation(summary = "User 생성(create)", description = "User를 생성합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "[SUCCSS] 사용자 생성"),
+            @ApiResponse(responseCode = "400", description = "[FAIL] 사용자 생성")
+    })
     public ResponseEntity<String> create(@RequestBody UserCreateDto dto) {
         try {
             String createdUserDeviceId = userService.create(dto);
@@ -40,8 +53,15 @@ public class UserController {
      * 사용자 정보 수정
      **/
     @PatchMapping("/users/{deviceId}")
+    @Operation(summary = "User 정보 수정(update)", description = "User 정보를 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "[SUCCESS] 사용자 데이터 수정"),
+            @ApiResponse(responseCode = "400", description = "[FAIL] 사용자 데이터 수정")
+    })
     public ResponseEntity<String> update(
+            @Schema(description = "사용자 디바이스 ID", example = "b8581580-f97e-11ee-af4b-490ac169fde7")
             @PathVariable String deviceId,
+
             @RequestBody UserUpdateDto dto
     ) {
         try {
@@ -59,7 +79,15 @@ public class UserController {
      * 사용자 삭제
      **/
     @DeleteMapping("/users/{deviceId}")
-    public ResponseEntity<String> delete(@PathVariable String deviceId) {
+    @Operation(summary = "User 삭제(delete)", description = "User를 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "[SUCCESS] 사용자 삭제"),
+            @ApiResponse(responseCode = "400", description = "[FAIL] 사용자 삭제")
+    })
+    public ResponseEntity<String> delete(
+            @Schema(description = "사용자 디바이스 ID", example = "b8581580-f97e-11ee-af4b-490ac169fde7")
+            @PathVariable String deviceId
+    ) {
         try {
             String delUserDeviceId = userService.delete(deviceId);
             return ResponseEntity.status(HttpStatus.OK)
@@ -75,7 +103,19 @@ public class UserController {
      * 스몸비 보행자 정보 조회
      **/
     @GetMapping("/users/{deviceId}/smombies")
-    public ResponseEntity<Object> smombies(@PathVariable String deviceId) {
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = ResponseSmombieDto.class)))
+                    }),
+            @ApiResponse(responseCode = "400", description = "[FAIL] 스몸비 조회")
+    })
+    public ResponseEntity<Object> smombies(
+            @Schema(description = "사용자 디바이스 ID", example = "b8581580-f97e-11ee-af4b-490ac169fde7")
+            @PathVariable String deviceId
+    ) {
         try {
             List<User> smombies = userService.getSmombieUsers(deviceId);
 
