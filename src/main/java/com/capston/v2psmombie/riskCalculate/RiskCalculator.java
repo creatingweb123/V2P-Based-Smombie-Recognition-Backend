@@ -1,3 +1,7 @@
+package com.capston.v2psmombie.riskCalculate;
+
+import com.capston.v2psmombie.domain.User;
+
 import java.util.List;
 
 public class RiskCalculator {
@@ -12,8 +16,10 @@ public class RiskCalculator {
     }
 
     public int riskCheck() {
-        double dif = findMinTime()
-                - calculateTimeToStop(calculateTotalStoppingDistance(carData.getSpeed(), 1), carDeceleration);
+        double dif = findMinTime() - calculateTimeToStop(
+                calculateTotalStoppingDistance(carData.getSpeed(), 1), carDeceleration
+        );
+
         if (dif > 30) {
             return 3;
         } else if (dif > 10) {
@@ -24,28 +30,28 @@ public class RiskCalculator {
     }
 
     /* speed: km/h, reactionTime: s */
-    public double calculateBrakeReactionDistance(double speed, double reactionTime) {
+    private double calculateBrakeReactionDistance(double speed, double reactionTime) {
         return (speed * reactionTime * 3.6) / 1000;
         // Convert km/h to m/s
     }
 
     // Function to calculate Braking Distance
-    public double calculateBrakingDistance(double speed) {
+    private double calculateBrakingDistance(double speed) {
         return (speed * speed * 0.4) / 1000;
         // Convert km/h to m/s
     }
 
-    public double calculateTotalStoppingDistance(double speed, double reactionTime) {
+    private double calculateTotalStoppingDistance(double speed, double reactionTime) {
         double brakeReactionDistance = calculateBrakeReactionDistance(speed, reactionTime);
         double brakingDistance = calculateBrakingDistance(speed);
         return brakeReactionDistance + brakingDistance;
     }
 
-    public double calculateTimeToStop(double totalStoppingDistance, double deceleration) {
+    private double calculateTimeToStop(double totalStoppingDistance, double deceleration) {
         return Math.sqrt((-2 * totalStoppingDistance) / deceleration);
     }
 
-    public double findMinTime() {
+    private double findMinTime() {
         double minMeetingTime = Double.MAX_VALUE;
         for (User user : smombieDataList) {
             double tmp = MeetingCalculator.timeToMeet(user, carData);
