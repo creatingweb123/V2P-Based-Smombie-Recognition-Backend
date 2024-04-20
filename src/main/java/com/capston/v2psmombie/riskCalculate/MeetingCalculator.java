@@ -1,5 +1,9 @@
+package com.capston.v2psmombie.riskCalculate;
 
 // 자동차가 보행자에게 도달하기까지 걸리는 시간
+
+import com.capston.v2psmombie.domain.User;
+
 import java.lang.Math;
 
 public class MeetingCalculator {
@@ -34,8 +38,12 @@ public class MeetingCalculator {
     /* speed: km/h, direction: degree */
     public static double timeToMeet(User userData, User carData) {
         // Initial distance between the two points
-        double initialDistance = haversine(userData.getLatitude(), userData.getLongitude(), carData.getLatitude(),
-                carData.getLongitude());
+        double initialDistance = haversine(
+                userData.getLatitude(),
+                userData.getLongitude(),
+                carData.getLatitude(),
+                carData.getLongitude()
+        );
 
         // Convert direction angles to radians
         double direction1Rad = Math.toRadians(userData.getDirection());
@@ -65,4 +73,3 @@ public class MeetingCalculator {
         return meetingTime;
     }
 }
-// 자동차가 보행자에게 도달하기까지 걸리는 시간
