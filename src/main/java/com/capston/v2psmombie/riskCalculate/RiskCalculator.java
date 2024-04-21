@@ -1,23 +1,47 @@
 package com.capston.v2psmombie.riskCalculate;
 
 import com.capston.v2psmombie.domain.User;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 public class RiskCalculator {
     private List<User> smombieDataList;
     private User carData;
-    private double carDeceleration;
 
-    public RiskCalculator(List<User> smombieDataList, User carData, double carDeceleration) {
+    @Builder.Default
+    private double carDeceleration = 1.0;
+
+    @Builder
+    public RiskCalculator(
+            List<User> smombieDataList,
+            User carData,
+            double carDeceleration
+    ) {
         this.smombieDataList = smombieDataList;
         this.carData = carData;
         this.carDeceleration = carDeceleration;
     }
 
+    public static RiskCalculatorBuilder builder(List<User> users, User car){
+        RiskCalculatorBuilder calculatorBuilder = new RiskCalculatorBuilder();
+        calculatorBuilder.smombieDataList(users);
+        calculatorBuilder.carData(car);
+        return calculatorBuilder;
+    }
+
+//    public RiskCalculator(List<User> smombieDataList, User carData, double carDeceleration) {
+//        this.smombieDataList = smombieDataList;
+//        this.carData = carData;
+//        this.carDeceleration = carDeceleration;
+//    }
+
     public int riskCheck() {
         double dif = findMinTime() - calculateTimeToStop(
-                calculateTotalStoppingDistance(carData.getSpeed(), 1), carDeceleration
+                calculateTotalStoppingDistance(carData.getSpeed(), 1),
+                carDeceleration
         );
 
         if (dif > 30) {
