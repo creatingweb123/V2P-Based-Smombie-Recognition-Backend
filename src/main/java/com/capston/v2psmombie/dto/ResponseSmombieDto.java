@@ -26,6 +26,7 @@ public class ResponseSmombieDto {
     private List<LocationDto> createLocations(List<User> users) {
         return users.stream()
                 .map(user -> new LocationDto(
+                        user.getDeviceId(),
                         user.getLatitude(),
                         user.getLongitude()))
                 .toList();
