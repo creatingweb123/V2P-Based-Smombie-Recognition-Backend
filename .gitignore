@@ -36,3 +36,7 @@ application-database.properties
 
 ### VS Code ###
 .vscode/
+
+### Docker db files ###
+mysql/db/*
+!mysql/db/.gitkeep
