@@ -5,6 +5,7 @@ import com.capston.v2psmombie.domain.User;
 import com.capston.v2psmombie.dto.ResponseSmombieDto;
 import com.capston.v2psmombie.dto.UserCreateDto;
 import com.capston.v2psmombie.dto.UserUpdateDto;
+import com.capston.v2psmombie.riskCalculate.RiskCalculator;
 import com.capston.v2psmombie.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -117,9 +118,14 @@ public class UserController {
             @PathVariable String deviceId
     ) {
         try {
+
+            User car = userService.getUserByDeviceId(deviceId);
             List<User> smombies = userService.getSmombieUsers(deviceId);
 
-            // TODO: 위험도 레벨 계산 로직 추가 필요
+            // 위험도 계산
+            //TODO: 위험도 로직 검토 필요
+            Double carDeceleration = 1.0;
+            //Integer riskLevel = new RiskCalculator(smombies, car, carDeceleration).riskCheck();
             Integer riskLevel = 0;
 
             return ResponseEntity.status(HttpStatus.OK)
