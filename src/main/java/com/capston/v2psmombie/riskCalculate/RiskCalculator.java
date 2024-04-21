@@ -49,7 +49,7 @@ public class RiskCalculator {
         double minMeetingTime = Double.MAX_VALUE;
         for (User user : smombieDataList) {
             double tmp = MeetingCalculator.timeToMeet(user, carData);
-            minMeetingTime = Double.min(minMeetingTime, tmp);
+            if(tmp>0) minMeetingTime = Double.min(minMeetingTime, tmp);
         }
         return minMeetingTime;
     }
