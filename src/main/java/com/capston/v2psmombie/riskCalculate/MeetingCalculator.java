@@ -66,6 +66,8 @@ public class MeetingCalculator {
         double meetingTime;
         if (relativeDistance == 0) {
             return -1; // Return -1 to indicate that the two persons are already meeting or cannot meet
+        } else if (relativeDistance > initialDistance) {
+            return -1; // Return -1 to indicate that the two persons are moving away from each other
         } else {
             meetingTime = initialDistance / relativeDistance;
         }
