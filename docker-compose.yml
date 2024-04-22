@@ -1,0 +1,42 @@
+# docker network create v2p-smombie-network
+# docker volume create mysql-data
+version: "3"
+services:
+    v2psmombie-db:
+        container_name: v2psmombie-db
+        ports:
+            - 3306:3306
+        networks:
+            - v2p-smombie-network
+        volumes:
+            - "./mysql/db:/var/lib/mysql"
+            - "./mysql/initdb.d:/docker-entrypoint-initdb.d"
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=v2psmombie
+            - MYSQL_USER=v2psmombie_admin
+            - MYSQL_PASSWORD=1111
+        image: mysql
+        healthcheck:                   
+            test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+            timeout: 20s
+            retries: 10
+    v2psmombie-server:
+        container_name: v2psmombie-server
+        ports:
+            - 8080:8080
+        networks:
+            - v2p-smombie-network
+        image: v2psmombie-server-image
+        depends_on:
+            v2psmombie-db:
+                condition: service_healthy
+networks:
+    v2p-smombie-network:
+        
+volumes:
+    mysql-data:
+      driver: local
+    v2psmombie-server-image:
+      driver: local
+        
