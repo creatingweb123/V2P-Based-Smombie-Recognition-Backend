@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.util.List;
 
+@Builder
 @Getter
 public class RiskCalculator {
     private List<User> smombieDataList;

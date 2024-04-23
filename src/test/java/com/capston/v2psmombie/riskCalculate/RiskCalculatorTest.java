@@ -28,14 +28,13 @@ class RiskCalculatorTest {
     public void riskCalculatorBuilderTest() {
         // given
         RiskCalculator calculator = RiskCalculator.builder(users, car)
-                .carDeceleration(2.0)
                 .build();
 
         // when
         Double decelerationValue = calculator.getCarDeceleration();
 
         // then
-        Assertions.assertThat(decelerationValue).isEqualTo(2.0);
+        Assertions.assertThat(decelerationValue).isEqualTo(1.0);
     }
 
 
