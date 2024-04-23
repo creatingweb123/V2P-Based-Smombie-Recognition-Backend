@@ -33,11 +33,6 @@ public class RiskCalculator {
         return calculatorBuilder;
     }
 
-//    public RiskCalculator(List<User> smombieDataList, User carData, double carDeceleration) {
-//        this.smombieDataList = smombieDataList;
-//        this.carData = carData;
-//        this.carDeceleration = carDeceleration;
-//    }
 
     public int riskCheck() {
         double dif = findMinTime() - calculateTimeToStop(
