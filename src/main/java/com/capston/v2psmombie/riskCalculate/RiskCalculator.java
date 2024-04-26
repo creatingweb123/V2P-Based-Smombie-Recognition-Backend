@@ -29,23 +29,14 @@ public class RiskCalculator {
     }
 
 
-    public int riskCheck() {
-        double dif = findMinTime();
-        if (dif > 30) {
-            return 3;
-        } else if (dif > 10) {
-            return 2;
-        } else {
-            return 1;
-        }
-    }
-    private double findMinTime() {
-        double minMeetingTime = Double.MAX_VALUE;
+    public List<Integer> riskCheck() {
+        List<Integer> riskList = new ArrayList<>();
         for (User user : smombieDataList) {
-            double tmp = MeetingCalculator.timeToMeet(user, carData);
-            if(tmp>0) minMeetingTime = Double.min(minMeetingTime, tmp);
+            double time = MeetingCalculator.timeToMeet(user, carData);
+            if(time<=0||time>40) riskList.add(100);
+            else if(time<15) riskList.add(1);
+            else if(time<25) riskList.add(2);
+            else riskList.add(3);
         }
-        return minMeetingTime;
     }
-
 }
